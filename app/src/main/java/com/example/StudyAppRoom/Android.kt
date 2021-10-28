@@ -37,17 +37,21 @@ class Android : AppCompatActivity() {
             val eddes = dialogView.findViewById<EditText>(R.id.eddes1)
             val tvBtn = dialogView.findViewById<Button>(R.id.button6)
             tvBtn.setOnClickListener {
-                var title = edtitle.text.toString()
-                var expl = edmore.text.toString()
-                var des = eddes.text.toString()
-                val s = AndroidNote(0, title, expl, des)
-                CoroutineScope(Dispatchers.IO).launch {
-                    NoteDatabase.getInstance(applicationContext).NoteDao().insertNote(s)
+                if (edtitle.text.isEmpty() || edmore.text.isEmpty() || eddes.text.isEmpty())
+                    Toast.makeText(this, "Fill all fields please", Toast.LENGTH_SHORT).show()
+                else {
+                    var title = edtitle.text.toString()
+                    var expl = edmore.text.toString()
+                    var des = eddes.text.toString()
+                    val s = AndroidNote(0, title, expl, des)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        NoteDatabase.getInstance(applicationContext).NoteDao().insertNote(s)
+                    }
+                    Toast.makeText(applicationContext, "data saved successfully! ", Toast.LENGTH_SHORT)
+                            .show()
+                    //retrieve data and update recycler view
+                    myRv()
                 }
-                Toast.makeText(applicationContext, "data saved successfully! ", Toast.LENGTH_SHORT)
-                    .show()
-                //retrieve data and update recycler view
-                myRv()
             }
             dialogBuilder.show()
         }
@@ -63,18 +67,22 @@ class Android : AppCompatActivity() {
         val eddes = dialogView.findViewById<EditText>(R.id.eddes2)
         val tvBtn = dialogView.findViewById<Button>(R.id.button7)
         tvBtn.setOnClickListener {
-            var title = edtitle.text.toString()
-            var expl = edmore.text.toString()
-            var des = eddes.text.toString()
-            val s = AndroidNote(ID, title, expl, des)
-            CoroutineScope(Dispatchers.IO).launch {
-                NoteDatabase.getInstance(applicationContext).NoteDao().updateNote(s)
+            if (edtitle.text.isEmpty() || edmore.text.isEmpty() || eddes.text.isEmpty())
+                Toast.makeText(this, "Fill all fields please", Toast.LENGTH_SHORT).show()
+            else {
+                var title = edtitle.text.toString()
+                var expl = edmore.text.toString()
+                var des = eddes.text.toString()
+                val s = AndroidNote(ID, title, expl, des)
+                CoroutineScope(Dispatchers.IO).launch {
+                    NoteDatabase.getInstance(applicationContext).NoteDao().updateNote(s)
+                }
+                Toast.makeText(applicationContext, "data updated successfully! ", Toast.LENGTH_SHORT)
+                        .show()
+                println("updated item")
+                //retrieve data and update recycler view
+                myRv()
             }
-            Toast.makeText(applicationContext, "data updated successfully! ", Toast.LENGTH_SHORT)
-                .show()
-            println("updated item")
-            //retrieve data and update recycler view
-            myRv()
         }
         dialogBuilder.show()
     }
